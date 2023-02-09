@@ -1,1 +1,1 @@
-ALX is stressful
+display contents list of your current directory
