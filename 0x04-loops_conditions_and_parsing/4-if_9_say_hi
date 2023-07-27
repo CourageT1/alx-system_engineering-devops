@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
 # Using a while loop and if statement to display "Best School" 10 times with a special case on the 9th iteration
+
 count=1
 while [ "$count" -le 10 ]
 do
