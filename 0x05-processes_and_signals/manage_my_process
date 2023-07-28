@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Function to write "I am alive!" to the file /tmp/my_process
+
+write_i_am_alive() {
+  while true; do
+    echo "I am alive!" >> /tmp/my_process
+    sleep 2
+  done
+}
+
+# Check the arguments
+case "$1" in
+  start)
+    # Start manage_my_process
+    write_i_am_alive &
+    # Save the script's PID to the file
+    echo $! > /var/run/my_process.pid
+    echo "manage_my_process started"
+    ;;
+  stop)
+    # Stop manage_my_process
+    if [ -f /var/run/my_process.pid ]; then
+      pid=$(cat /var/run/my_process.pid)
+      kill "$pid" && sleep 2 # Wait for the process to gracefully terminate
+      rm -f /var/run/my_process.pid
+      echo "manage_my_process stopped"
+    else
+      echo "No running manage_my_process found."
+    fi
+    ;;
+  restart)
+    # Restart manage_my_process
+    $0 stop
+    $0 start
+    echo "manage_my_process restarted"
+    ;;
+  *)
+    # Display usage if no or invalid argument is passed
+    echo "Usage: $0 {start|stop|restart}"
+    ;;
+esac
