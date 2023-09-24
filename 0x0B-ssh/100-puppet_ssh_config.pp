@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
-# Disable password authentication and configure SSH client to use a specific private key
-file_line { 'Turn off passwd auth':
-  path   => '/etc/ssh/sshd_config',
-  line   => 'PasswordAuthentication no',
-  ensure => present,
+# Puppet manifest to configure SSH client
+
+file { '/home/your_username/.ssh/config':
+  ensure  => 'present',
+  owner   => 'your_username',
+  group   => 'your_username',
+  mode    => '0600',
+  content => template('your_module/ssh_config.erb'), # Replace with the actual path to your template
 }
 
-file_line { 'Declare identity file':
-  path   => '/etc/ssh/ssh_config',
-  line   => '    IdentityFile ~/.ssh/school',
+file { '/home/your_username/.ssh/school':
+  ensure  => 'file',
+  owner   => 'your_username',
+  group   => 'your_username',
+  mode    => '0600',
+  source  => 'puppet:///modules/your_module/school', # Replace with the actual path to your private key
+}
+
+file_line { 'disable_password_auth':
+  path   => '/home/your_username/.ssh/config',
+  line   => 'PasswordAuthentication no',
+  match  => 'PasswordAuthentication',
   ensure => present,
 }
