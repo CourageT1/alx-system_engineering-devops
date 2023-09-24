@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-#  a Bash script that creates an RSA key pair.
-
-#!/bin/bash
+#  a Bash script that creates an RSA key pair
 
 # Define the key filename
 key_filename="school"
