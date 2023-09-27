@@ -4,25 +4,18 @@
 # server
 # Nginx should be listening on port 80
 
-sudo apt-get update
-sudo apt-get install -y nginx
+apt-get update
+apt-get install -y nginx
 
-# Create a default Nginx configuration file with the desired content
-echo "server {
-    listen 80;
-    server_name _;
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Hello World!" > /etc/nginx/html/index.html
+printf %s "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /etc/nginx/html;
+     index       index.html index.htm;
+}
+" > /etc/nginx/sites-available/default
 
-    location / {
-        echo 'Hello World!';
-    }
-}" | sudo tee /etc/nginx/sites-available/default
-
-# Restart Nginx
-sudo service nginx restart
-
-# Check if Nginx is running
-if sudo service nginx status | grep -q "active (running)"; then
-    echo "Nginx has been successfully installed and configured."
-else
-    echo "Nginx installation and configuration failed."
-fi
+service nginx restart
