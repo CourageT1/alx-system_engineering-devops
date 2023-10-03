@@ -10,4 +10,4 @@
 
 package { 'nginx':
   ensure => installed,
-}
+};
