@@ -4,28 +4,7 @@
 #+    Distributes requests using a round-robin algorithm.
 
 
-sudo apt-get update
-sudo apt-get install -y haproxy
-
-# Configure HAProxy to send traffic to web-01 and web-02 using roundrobin algorithm
-cat <<EOL | sudo tee /etc/haproxy/haproxy.cfg > /dev/null
-frontend http_front
-    bind *:80
-    mode http
-    default_backend http_back
-
-backend http_back 
-    balance roundrobin
-    mode http
-    server 239449-web-01 52.86.245.35:80 check
-    server 239449-web-02 18.234.129.196:80 check
-EOL
-
+sudo apt update
+sudo apt install haproxy -y
+sudo sh -c 'echo "\nlisten myserver\n\tbind *:80\n\tbalance roundrobin\n\tserver server1 52.86.245.35:80 check\n\tserver server2 18.234.129.196:80 check\n" >> /etc/haproxy/haproxy.cfg'
 sudo service haproxy restart
-
-sudo systemctl enable haproxy
-
-sudo hostnamectl set-hostname 239449-lb-01
-echo "239449-lb-01" | sudo tee /etc/hostname > /dev/null
-sudo sed -i "s/127.0.1.1.*/127.0.1.1\t239449-lb-01/g" /etc/hosts
-sudo systemctl restart systemd-hostnamed
