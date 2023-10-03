@@ -3,42 +3,30 @@
 #+    Enables management via the init script.
 #+    Distributes requests using a round-robin algorithm.
 
-apt-get install -y software-properties-common
-add-apt-repository -y ppa:vbernat/haproxy-1.8
-apt-get update
-apt-get install -y haproxy=1.8.\*
+#!/bin/bash
 
-echo "ENABLED=1" >> /etc/default/haproxy
-mv /etc/haproxy/haproxy.cfg{,.original}
-touch /etc/haproxy/haproxy.cfg
+sudo apt-get update
+sudo apt-get install -y haproxy
 
-printf %s "global
-    log 127.0.0.1 local0 notice
-    maxconn 2000
-    user haproxy
-    group haproxy
-
-defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    retries 3
-    option redispatch
-    timeout connect  5000
-    timeout client  10000
-    timeout server  10000
-
-listen hbnb
-    bind 0.0.0.0:80
+# Configure HAProxy to send traffic to web-01 and web-02 using roundrobin algorithm
+cat <<EOL | sudo tee /etc/haproxy/haproxy.cfg > /dev/null
+frontend http_front
+    bind *:80
     mode http
-    stats enable
-    stats uri /haproxy?stats
-    balance roundrobin
-    option httpclose
-    option forwardfor
-    server 239449-web-01 52.86.245.35 check
-    server 239449-web-02 18.234.129.196 check
-" >> /etc/haproxy/haproxy.cfg
+    default_backend http_back
 
-service haproxy start
+backend http_back 
+    balance roundrobin
+    mode http
+    server 239449-web-01 52.86.245.35:80 check
+    server 239449-web-02 18.234.129.196:80 check
+EOL
+
+sudo service haproxy restart
+
+sudo systemctl enable haproxy
+
+sudo hostnamectl set-hostname 239449-lb-01
+echo "239449-lb-01" | sudo tee /etc/hostname > /dev/null
+sudo sed -i "s/127.0.1.1.*/127.0.1.1\t239449-lb-01/g" /etc/hosts
+sudo systemctl restart systemd-hostnamed
