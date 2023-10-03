@@ -8,12 +8,11 @@
 #+    Contains a custom HTTP header named X-Served-By.
 #+    The value of the HTTP header is the hostname of the running server.
 
-apt-get update
 apt-get install -y nginx
 
 mkdir -p /var/www/html
 touch /var/www/html/index.html
-echo "School" > /var/www/html/index.html
+echo "Hello World!" > /var/www/html/index.html
 touch /var/www/html/404.html
 echo "Ceci n'est pas une page" > /var/www/html/404.html
 
@@ -25,7 +24,7 @@ printf %s "server {
     index  index.html index.htm;
 
     location /redirect_me {
-        return 301 http://cuberule.com/;
+        return 301 https//YouTube.com/;
     }
 
     error_page 404 /404.html;
