@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Installs HAProxy version 1.8 with the following configurations:
+
+apt-get -y update 
+apt-get install -y haproxy
+
+sudo sh -c 'echo " 
+frontend http 
+    bind *:80 
+    mode http 
+    default_backend web-backend 
+
+backend web-backend 
+    balance roundrobin 
+    server 239449-web-01 52.86.245.35:80 check 
+    server 239449-web-02 18.234.129.196:80 check 
+" >> /etc/haproxy/haproxy.cfg'
+
+sudo service haproxy restart
