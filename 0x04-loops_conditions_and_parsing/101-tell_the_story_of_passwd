@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Using a while loop and IFS to display the content of /etc/passwd with the desired format
+
+while IFS=':' read -r username _ userid groupid _ _ homedir shell; do
+    password=$(grep "^$username:" /etc/shadow | cut -d ':' -f 2)
+    echo "The user $username is part of the $groupid gang, lives in $homedir and rides $shell."
+    echo "User ID's place is protected by the passcode $password, more info about the user here: USER ID INFO"
+    echo
+done < /etc/passwd
+

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 0x17. Web stack debugging #3
 DevOps
 SysAdmin
@@ -89,3 +90,6 @@ Repo:
 GitHub repository: alx-system_engineering-devops
 Directory: 0x17-web_stack_debugging_3
 File: 0-strace_is_your_friend.pp
+=======
+Task 0.Where am I?
+>>>>>>> ab194cd56c826fc94f845c958b7087a51878c636
